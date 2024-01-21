@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>AR Marker with A-Frame Elements</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+</head>
+<body>
+    <a-scene embedded arjs>
+        <a-marker preset="hiro">
+            <a-entity
+            position="0 2 0"
+            scale="0.2 0.2 0.2"
+            gltf-model="earth.gltf"
+            id="earth"
+            ></a-entity>
+            <a-entity
+            position="0 2 0"
+            scale="0.5 0.5 0.5"
+            gltf-model="jup.gltf"
+            id="jupiter"
+            ></a-entity>
+            <a-entity
+            position="0 2 0"
+            scale="0.2 0.2 0.2"
+            gltf-model="mars.gltf"
+            id="mars"
+            ></a-entity>
+           <a-entity
+            position="0 2 0"
+            scale="0.4 0.4 0.4"
+            gltf-model="sat.gltf"
+            id="saturn"
+            ></a-entity>
+            <a-entity
+            position="0 2 0"
+            scale="3 3 3"
+            gltf-model="sc.gltf"
+            id="bg"
+            ></a-entity>
+            <a-sphere id="sun" position="0 0 0" radius="0.8" color="yellow"></a-sphere>
+            ></a-entity>
+            <a-sphere id="uranus" position="0 -8 -9" radius="0.4" color="black"></a-sphere>
+            <a-sphere id="neptune" position="0 -9 -10" radius="0.35" color="violet"></a-sphere>
+            <a-entity
+            position="0 2 0"
+            scale="0.1 0.1 0.1"
+            gltf-model="venus.gltf"
+            id="venus"
+            ></a-entity>
+            <a-entity
+            position="0 2 0"
+            scale="0.1 0.1 0.1"
+            gltf-model="mer.gltf"
+            id="mercury"
+            ></a-entity>
+        </a-marker>
+        <audio id="voiceOver" controls style="display: none">
+            <source src="Solar system rhyme.mp3" type="audio/mp3">
+            Your browser does not support the audio tag.
+        </audio>
+        <script>
+            const planets = [
+                document.getElementById('mercury'),
+                document.getElementById('venus'),
+                document.getElementById('earth'),
+                document.getElementById('mars'),
+                document.getElementById('jupiter'),
+                document.getElementById('saturn'),
+                document.getElementById('uranus'),
+                document.getElementById('neptune')
+            ];
+            const sun = document.getElementById('sun');
+    
+            // Variables for animation
+            let time = 0;
+
+            // Function to update planet positions
+            function updatePlanetPositions() {
+                const orbitRadius = [2,3,4,5,6,7,8,9];
+                const orbitSpeeds = [0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09];
+
+                planets.forEach((planet, index) => {
+                    const angle = time * orbitSpeeds[index];
+                    const x = orbitRadius[index] * Math.cos(angle);
+                    const z = orbitRadius[index] * Math.sin(angle);
+
+                    planet.setAttribute('position', `${x} 0 ${z}`);
+                });
+            }
+
+            // Animation loop
+            function animate() {
+                time += 1;
+                updatePlanetPositions();
+                requestAnimationFrame(animate);
+            }
+            function playVoiceOver() {
+                const voiceOverElement = document.getElementById('voiceOver');
+                if (voiceOverElement) {
+                    voiceOverElement.play();
+                }
+            }
+
+            // Event listener for AR marker detection
+            document.querySelector('a-marker').addEventListener('markerFound', () => {
+            // Trigger voice-over when the marker is found
+            playVoiceOver();
+            });
+    
+            // Start animation
+            animate();
+        </script>
+        <a-entity camera></a-entity>
+        </a-scene>
+</body>
+</html>
